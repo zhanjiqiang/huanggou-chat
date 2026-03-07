@@ -58,31 +58,38 @@ jobs:
         script: |
           echo "🚀 开始部署黄狗一号聊天机器人..."
           
-          # 进入项目目录
-          cd /root/.openclaw/workspace/huanggou-chat
+          # 项目目录（ubuntu用户可访问）
+          PROJECT_DIR="/home/ubuntu/huanggou-chat"
           
-          # 拉取最新代码
-          git pull origin main
+          # 克隆或更新代码
+          if [ ! -d "$PROJECT_DIR" ]; then
+            echo "📥 首次部署，克隆仓库..."
+            git clone https://github.com/zhanjiqiang/huanggou-chat.git "$PROJECT_DIR"
+          else
+            echo "📥 拉取最新代码..."
+            cd "$PROJECT_DIR"
+            git pull origin main
+          fi
           
           # 进入后端目录
-          cd backend
+          cd "$PROJECT_DIR/backend"
           
-          # 停止旧服务
+          # 停止旧服务（使用sudo）
           echo "🛑 停止旧服务..."
-          pkill -f "chat-1.0.0.jar" || true
+          sudo pkill -f "chat-1.0.0.jar" || true
           sleep 2
           
           # 检查Java环境
           if ! command -v java &> /dev/null; then
               echo "☕ 安装Java 17..."
-              apt-get update -qq
-              apt-get install -y -qq openjdk-17-jre-headless
+              sudo apt-get update -qq
+              sudo apt-get install -y -qq openjdk-17-jre-headless
           fi
           
           # 检查Maven环境
           if ! command -v mvn &> /dev/null; then
               echo "📦 安装Maven..."
-              apt-get install -y -qq maven
+              sudo apt-get install -y -qq maven
           fi
           
           # 构建项目
@@ -105,7 +112,7 @@ jobs:
           # 检查服务状态
           if pgrep -f "chat-1.0.0.jar" > /dev/null; then
             echo "✅ 部署成功！服务运行在 http://203.195.195.133:3001"
-            echo "📋 日志文件: /root/.openclaw/workspace/huanggou-chat/backend/app.log"
+            echo "📋 日志文件: $PROJECT_DIR/backend/app.log"
           else
             echo "❌ 部署失败！请查看日志"
             tail -50 app.log
