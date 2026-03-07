@@ -35,10 +35,10 @@ public class ChatService {
     private final ExecutorService executor = Executors.newCachedThreadPool();
     private final ObjectMapper objectMapper = new ObjectMapper();
     
-    @Value("${openrouter.api.key}")
+    @Value("${zhipu.api.key}")
     private String apiKey;
     
-    @Value("${openrouter.api.base-url}")
+    @Value("${zhipu.api.base-url}")
     private String baseUrl;
     
     // 黄狗一号系统提示词

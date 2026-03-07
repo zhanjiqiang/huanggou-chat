@@ -173,7 +173,7 @@ const messagesContainer = ref(null)
 const imageInput = ref(null)
 
 const availableModels = ref([])
-const currentModel = ref('liquid/lfm-2.5-1.2b-instruct:free')
+const currentModel = ref('glm-4.7')
 
 // 加载会话列表
 async function loadSessions() {
