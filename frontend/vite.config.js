@@ -4,7 +4,7 @@ import path from 'path'
 
 export default defineConfig({
   plugins: [vue()],
-  base: '/',
+  base: '/huanggou-chat/',  // GitHub Pages 项目路径
   resolve: {
     alias: {
       '@': path.resolve(__dirname, 'src')
