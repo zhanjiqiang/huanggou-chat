@@ -18,7 +18,7 @@ public class ModelController {
         Map.of("id", "glm-5", "name", "GLM-5 (最强)", "recommended", false),
         Map.of("id", "glm-4.6", "name", "GLM-4.6", "recommended", false),
         Map.of("id", "glm-4.5-air", "name", "GLM-4.5 Air (快速)", "recommended", false),
-        Map.of("id", "glm-4.7-flash", "name", "GLM-4.7 Flash", "recommended", false)
+        Map.of("id", "glm-4.5", "name", "GLM-4.5", "recommended", false)
     );
     
     /**
