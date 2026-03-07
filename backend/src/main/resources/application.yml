@@ -1,0 +1,32 @@
+server:
+  port: 3001
+
+spring:
+  application:
+    name: huanggou-chat
+  
+  datasource:
+    url: jdbc:sqlite:data/huanggou.db
+    driver-class-name: org.sqlite.JDBC
+    
+  jpa:
+    database-platform: org.hibernate.community.dialect.SQLiteDialect
+    hibernate:
+      ddl-auto: update
+    show-sql: false
+    properties:
+      hibernate:
+        format_sql: true
+
+jwt:
+  secret: huanggou-secret-key-2026-please-change-in-production-environment
+  expiration: 2592000000 # 30天
+
+openclaw:
+  gateway:
+    base-url: http://localhost:18789
+
+logging:
+  level:
+    com.huanggou.chat: DEBUG
+    org.hibernate.SQL: ERROR

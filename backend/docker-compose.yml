@@ -1,0 +1,21 @@
+version: '3.8'
+
+services:
+  huanggou-chat:
+    build: .
+    container_name: huanggou-chat
+    restart: unless-stopped
+    ports:
+      - "3001:3001"
+    environment:
+      - SPRING_PROFILES_ACTIVE=prod
+      - JWT_SECRET=huanggou-secret-key-2026-please-change-in-production
+      - OPENCLAW_GATEWAY_BASE_URL=http://host.docker.internal:18789
+    volumes:
+      - ./data:/app/data
+    networks:
+      - huanggou-network
+
+networks:
+  huanggou-network:
+    driver: bridge

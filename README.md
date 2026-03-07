@@ -5,135 +5,230 @@
 ## 功能特性
 
 - ✅ **文字聊天** - 与AI实时对话
-- ✅ **流式输出** - 实时显示AI回复
+- ✅ **流式输出** - 实时显示AI回复（SSE）
 - ✅ **图片识别** - 上传截图让AI识别
 - ✅ **会话管理** - 新建/删除/切换会话
 - ✅ **历史记录** - 查看历史会话和消息
 - ✅ **模型切换** - 支持GLM-4.7/GLM-5等模型
-- ✅ **用户认证** - 登录/注册系统
+- ✅ **用户认证** - 登录/注册系统（JWT）
 - ✅ **Markdown渲染** - 支持代码高亮和格式化
 
 ## 技术栈
 
-| 层级 | 技术 |
+### 前端
+| 技术 | 版本 | 说明 |
+|------|------|------|
+| Vue | 3.4 | 渐进式框架 |
+| Vite | 5.2 | 构建工具 |
+| Element Plus | 2.6 | UI组件库 |
+| Pinia | 2.1 | 状态管理 |
+| Vue Router | 4.3 | 路由 |
+
+### 后端（Java）
+| 技术 | 版本 | 说明 |
+|------|------|------|
+| Spring Boot | 3.2.3 | 后端框架 |
+| Spring Security | 6.2 | 安全认证 |
+| JWT | 0.12.5 | Token认证 |
+| SQLite | 3.45 | 轻量级数据库 |
+| Maven | 3.9 | 项目构建 |
+| Java | 17 | 运行环境 |
+
+### 部署
+| 技术 | 说明 |
 |------|------|
-| 前端 | Vue 3 + Vite + Element Plus |
-| 后端 | Node.js + Express |
-| 数据库 | SQLite (better-sqlite3) |
-| 认证 | JWT Token |
-| 托管 | GitHub Pages (前端) + 服务器 (后端) |
+| Docker | 容器化部署 |
+| GitHub Actions | CI/CD自动化 |
+| GitHub Pages | 前端托管 |
+| GitHub Container Registry | Docker镜像仓库 |
 
 ## 项目结构
 
 ```
 huanggou-chat/
-├── backend/                 # 后端服务
-│   ├── server.js           # Express服务器
-│   ├── database.js         # SQLite数据库
-│   ├── openclaw.js         # OpenClaw API封装
-│   ├── routes/             # API路由
-│   │   ├── auth.js        # 认证
-│   │   ├── chat.js        # 聊天
-│   │   ├── sessions.js    # 会话管理
-│   │   └── models.js      # 模型管理
-│   └── data/              # 数据库文件（自动创建）
-├── frontend/               # 前端应用
+├── backend/                          # Java后端
+│   ├── src/main/java/com/huanggou/
+│   │   ├── ChatApplication.java     # 主类
+│   │   ├── config/                  # 配置类
+│   │   ├── controller/              # 控制器
+│   │   ├── service/                 # 业务逻辑
+│   │   ├── entity/                  # 实体类
+│   │   ├── mapper/                  # 数据访问
+│   │   ├── dto/                     # 数据传输对象
+│   │   └── utils/                   # 工具类
+│   ├── src/main/resources/
+│   │   └── application.yml          # 配置文件
+│   ├── Dockerfile                   # Docker构建文件
+│   ├── docker-compose.yml           # Docker编排
+│   └── pom.xml                      # Maven配置
+├── frontend/                         # Vue前端
 │   ├── src/
-│   │   ├── views/         # 页面组件
-│   │   ├── api/           # API封装
-│   │   ├── store/         # Pinia状态管理
-│   │   └── router/        # 路由配置
-│   └── dist/              # 编译输出（自动创建）
-└── README.md
+│   │   ├── views/                   # 页面组件
+│   │   ├── api/                     # API封装
+│   │   ├── store/                   # 状态管理
+│   │   └── router/                  # 路由配置
+│   └── dist/                        # 编译输出
+└── .github/workflows/               # CI/CD配置
+    ├── backend-ci.yml               # 后端自动部署
+    └── deploy.yml                   # 前端自动部署
 ```
 
-## 部署说明
+## CI/CD 自动化部署
 
-### 1. 后端部署（服务器）
+### GitHub Actions 支持
+
+✅ **支持 CI/CD 自动化部署**
+
+每次推送到 `main` 分支时，GitHub Actions 会自动执行：
+
+#### 后端（Java）
+1. ✅ 编译Java代码（Maven）
+2. ✅ 运行单元测试
+3. ✅ 构建Docker镜像
+4. ✅ 推送到GitHub Container Registry
+5. ✅ SSH部署到服务器（需要配置secrets）
+
+#### 前端（Vue）
+1. ✅ 安装依赖（npm ci）
+2. ✅ 编译前端（npm run build）
+3. ✅ 部署到GitHub Pages
+
+### 配置 GitHub Secrets
+
+在仓库设置中添加以下 Secrets：
+
+| Secret | 说明 |
+|--------|------|
+| `SERVER_HOST` | 服务器IP地址 |
+| `SERVER_USER` | SSH用户名（如：root） |
+| `SERVER_SSH_KEY` | SSH私钥 |
+| `VITE_API_BASE_URL` | 后端API地址 |
+
+## 本地开发
+
+### 后端
+
+```bash
+# 安装依赖（需要Maven和JDK 17）
+cd backend
+mvn clean install
+
+# 运行开发环境
+mvn spring-boot:run
+
+# 后端会运行在 http://localhost:3001
+```
+
+### 前端
+
+```bash
+# 安装依赖
+cd frontend
+npm install
+
+# 运行开发环境（会自动代理到后端）
+npm run dev
+
+# 前端会运行在 http://localhost:5173
+```
+
+## 服务器部署
+
+### 方式1：Docker Compose（推荐）
 
 ```bash
 # 克隆项目
 git clone https://github.com/zhanjiqiang/huanggou-chat.git
-cd huanggou-chat
+cd huanggou-chat/backend
 
-# 安装依赖
-npm install
+# 拉取镜像
+docker pull ghcr.io/zhanjiqiang/huanggou-chat:latest
 
 # 启动服务
-npm start
+docker-compose up -d
+
+# 查看日志
+docker-compose logs -f
 ```
 
-后端会运行在 `http://localhost:3001`
-
-### 2. 前端部署（GitHub Pages）
+### 方式2：JAR直接运行
 
 ```bash
-# 进入前端目录
-cd frontend
-
-# 安装依赖
-npm install
-
-# 修改 vite.config.js 中的 API 地址
-# 将 target 改为你的服务器地址
-
 # 编译
-npm run build
+cd backend
+mvn clean package -DskipTests
 
-# 部署到 GitHub Pages
-# 在 GitHub 仓库设置中启用 Pages，选择 /frontend/dist 目录
+# 运行
+java -jar target/chat-1.0.0.jar
+
+# 后台运行
+nohup java -jar target/chat-1.0.0.jar > app.log 2>&1 &
 ```
-
-### 3. 环境变量（可选）
-
-创建 `.env` 文件：
-```env
-PORT=3001
-JWT_SECRET=your-secret-key
-```
-
-## 本地开发
-
-```bash
-# 后端
-npm run dev
-
-# 前端（新终端）
-cd frontend
-npm run dev
-```
-
-访问 `http://localhost:5173`
 
 ## API文档
 
-### 认证
-- `POST /api/auth/register` - 注册
-- `POST /api/auth/login` - 登录
-- `GET /api/auth/me` - 获取当前用户
+### 认证 API
+| 方法 | 路径 | 说明 |
+|------|------|------|
+| POST | `/api/auth/register` | 注册 |
+| POST | `/api/auth/login` | 登录 |
+| GET | `/api/auth/me` | 获取当前用户 |
 
-### 聊天
-- `POST /api/chat/send` - 发送消息
-- `POST /api/chat/stream` - 流式发送（SSE）
-- `POST /api/chat/upload` - 上传图片
+### 聊天 API
+| 方法 | 路径 | 说明 |
+|------|------|------|
+| POST | `/api/chat/send` | 发送消息 |
+| POST | `/api/chat/stream` | 流式发送（SSE） |
+| POST | `/api/chat/upload` | 上传图片 |
 
-### 会话
-- `GET /api/sessions` - 获取会话列表
-- `POST /api/sessions` - 创建新会话
-- `GET /api/sessions/:id/messages` - 获取会话消息
-- `DELETE /api/sessions/:id` - 删除会话
+### 会话 API
+| 方法 | 路径 | 说明 |
+|------|------|------|
+| GET | `/api/sessions` | 获取会话列表 |
+| POST | `/api/sessions` | 创建新会话 |
+| GET | `/api/sessions/:id` | 获取会话详情 |
+| DELETE | `/api/sessions/:id` | 删除会话 |
 
-### 模型
-- `GET /api/models/available` - 获取可用模型
-- `POST /api/models/add` - 添加模型
-- `POST /api/models/setDefault` - 设置默认模型
+## 环境变量
+
+### 后端（application.yml）
+```yaml
+server:
+  port: 3001
+
+jwt:
+  secret: your-secret-key
+  expiration: 2592000000 # 30天
+
+openclaw:
+  gateway:
+    base-url: http://localhost:18789
+```
+
+### 前端（.env）
+```env
+VITE_API_BASE_URL=http://your-server:3001
+```
 
 ## 注意事项
 
-- GitHub Pages只能托管静态文件，后端API必须部署在服务器上
-- 需要配置CORS允许跨域请求
-- JWT Token存储在localStorage，有效期30天
-- SQLite数据库文件在 `backend/data/huanggou.db`
+- ✅ **GitHub Pages不需要域名备案**
+- ⚠️ 后端API需要部署在服务器上
+- ⚠️ 需要配置CORS允许跨域
+- ⚠️ JWT Token存储在localStorage
+- ⚠️ SQLite数据库文件在 `backend/data/huanggou.db`
+
+## 性能优化
+
+### 后端
+- 使用SQLite轻量级数据库
+- JVM参数：`-Xms256m -Xmx512m`
+- Docker Alpine镜像（最小化体积）
+
+### 前端
+- Vite构建（快速冷启动）
+- 路由懒加载
+- Element Plus按需引入
 
 ## License
 
