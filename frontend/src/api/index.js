@@ -9,9 +9,10 @@ const api = axios.create({
 
 // 请求拦截器 - 添加token
 api.interceptors.request.use(config => {
-  const userStore = useUserStore()
-  if (userStore.token) {
-    config.headers.Authorization = `Bearer ${userStore.token}`
+  // 先尝试从localStorage读取token
+  const token = localStorage.getItem('huanggou_token')
+  if (token) {
+    config.headers.Authorization = `Bearer ${token}`
   }
   return config
 })
@@ -21,9 +22,9 @@ api.interceptors.response.use(
   response => response,
   error => {
     if (error.response?.status === 401) {
-      const userStore = useUserStore()
-      userStore.logout()
-      window.location.href = '/login'
+      localStorage.removeItem('huanggou_token')
+      localStorage.removeItem('huanggou_user')
+      window.location.href = '/chat/'
     }
     return Promise.reject(error)
   }

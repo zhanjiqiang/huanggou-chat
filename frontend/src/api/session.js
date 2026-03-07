@@ -15,7 +15,7 @@ export const sessionApi = {
 
   // 获取会话消息
   getMessages(sessionId) {
-    return api.get(`/sessions/${sessionId}/messages`)
+    return api.get(`/chat/${sessionId}/messages`)
       .then(res => res.data)
   },
 

@@ -38,7 +38,8 @@ public class SecurityConfig {
             .sessionManagement(session -> 
                 session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
             .authorizeHttpRequests(auth -> auth
-                .requestMatchers("/api/auth/**", "/health", "/api/health").permitAll()
+                .requestMatchers("/api/auth/**", "/health", "/api/health", "/api/models/**").permitAll()
+                .requestMatchers("/api/chat/stream/**").permitAll() // 流式API通过URL参数验证token
                 .anyRequest().authenticated()
             )
             .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);

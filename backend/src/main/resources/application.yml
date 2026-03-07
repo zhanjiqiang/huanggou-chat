@@ -26,6 +26,11 @@ openclaw:
   gateway:
     base-url: http://localhost:18789
 
+openrouter:
+  api:
+    key: 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
+    base-url: https://openrouter.ai/api/v1
+
 logging:
   level:
     com.huanggou.chat: DEBUG

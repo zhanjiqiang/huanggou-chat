@@ -3,7 +3,7 @@
     <!-- 左侧会话列表 -->
     <div class="sidebar">
       <div class="sidebar-header">
-        <h2>🤬 黄狗一号</h2>
+        <h2>🤬 嘴臭君</h2>
         <el-button type="primary" size="small" @click="createNewSession">
           <el-icon><Plus /></el-icon>
           新对话
@@ -51,7 +51,7 @@
     <!-- 右侧聊天区域 -->
     <div class="main-content">
       <div v-if="!currentSession" class="welcome">
-        <h1>🤬 黄狗一号聊天机器人</h1>
+        <h1>🤬 嘴臭君聊天</h1>
         <p>选择一个会话或创建新对话开始聊天</p>
       </div>
 
@@ -173,7 +173,7 @@ const messagesContainer = ref(null)
 const imageInput = ref(null)
 
 const availableModels = ref([])
-const currentModel = ref('zai/glm-4.7')
+const currentModel = ref('liquid/lfm-2.5-1.2b-instruct:free')
 
 // 加载会话列表
 async function loadSessions() {
@@ -250,7 +250,7 @@ async function deleteSession(sessionId) {
   }
 }
 
-// 发送消息（流式）
+// 发送消息（SSE流式）
 async function sendMessage() {
   if (!inputMessage.value.trim() || sending.value) return
 
@@ -268,46 +268,49 @@ async function sendMessage() {
   scrollToBottom()
 
   try {
-    // 使用SSE流式输出
+    // 使用SSE流式请求
     const eventSource = new EventSource(
-      `${chatApi.getStreamUrl()}/${currentSession.value.id}?message=${encodeURIComponent(message)}&model=${currentModel.value}`
+      `${import.meta.env.VITE_API_BASE_URL || ''}/api/chat/stream/${currentSession.value.id}?message=${encodeURIComponent(message)}&model=${currentModel.value}&token=${userStore.token}`
     )
 
     eventSource.onmessage = (event) => {
-      const data = event.data
-      if (data === '[DONE]') {
-        eventSource.close()
-        sending.value = false
-        // 保存完整的AI回复到messages
-        if (streamingContent.value) {
-          messages.value.push({
-            role: 'assistant',
-            content: streamingContent.value,
-            model: currentModel.value,
-            created_at: new Date().toISOString()
-          })
-          streamingContent.value = ''
-          loadMessages(currentSession.value.id) // 重新加载消息
-        }
-      } else if (data.startsWith('[ERROR]')) {
-        eventSource.close()
-        ElMessage.error(data.replace('[ERROR] ', ''))
-        sending.value = false
-        streamingContent.value = ''
-      } else {
-        streamingContent.value += data
-        scrollToBottom()
-      }
+      streamingContent.value += event.data
+      scrollToBottom()
     }
 
-    eventSource.onerror = (error) => {
+    eventSource.addEventListener('done', () => {
+      eventSource.close()
+      // 保存完整回复
+      if (streamingContent.value) {
+        messages.value.push({
+          role: 'assistant',
+          content: streamingContent.value,
+          model: currentModel.value,
+          created_at: new Date().toISOString()
+        })
+        streamingContent.value = ''
+      }
+      sending.value = false
+      loadMessages(currentSession.value.id)
+    })
+
+    eventSource.addEventListener('error', (event) => {
+      eventSource.close()
+      if (event.data) {
+        ElMessage.error('错误：' + event.data)
+      }
+      sending.value = false
+      streamingContent.value = ''
+    })
+
+    eventSource.onerror = () => {
       eventSource.close()
       ElMessage.error('连接失败')
       sending.value = false
       streamingContent.value = ''
     }
   } catch (error) {
-    ElMessage.error('发送失败')
+    ElMessage.error('发送失败：' + error.message)
     sending.value = false
     streamingContent.value = ''
   }

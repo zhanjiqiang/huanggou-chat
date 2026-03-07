@@ -2,7 +2,7 @@
   <div class="login-container">
     <div class="login-card">
       <div class="logo">
-        <h1>🤬 黄狗一号</h1>
+        <h1>🤬 嘴臭君</h1>
         <p>宇宙第一嘴臭欠打的AI</p>
       </div>
 
