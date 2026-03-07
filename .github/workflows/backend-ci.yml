@@ -96,8 +96,9 @@ jobs:
           echo "🔨 构建项目..."
           mvn clean package -DskipTests
           
-          # 创建数据目录
+          # 创建数据目录（SQLite需要）
           mkdir -p data
+          echo "✅ 数据目录已创建"
           
           # 启动新服务
           echo "✅ 启动新服务..."
