@@ -2,7 +2,9 @@ import axios from 'axios'
 import { useUserStore } from '../store/user'
 
 const api = axios.create({
-  baseURL: '/api'
+  baseURL: import.meta.env.VITE_API_BASE_URL 
+    ? `${import.meta.env.VITE_API_BASE_URL}/api` 
+    : '/api'
 })
 
 // 请求拦截器 - 添加token
