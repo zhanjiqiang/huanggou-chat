@@ -10,11 +10,13 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Map;
+
 /**
  * 认证控制器
  */
 @RestController
-@RequestMapping("/api/auth")
+@RequestMapping("/auth")
 @RequiredArgsConstructor
 public class AuthController {
     
@@ -56,7 +58,29 @@ public class AuthController {
         return ResponseEntity.ok(new AuthResponse.UserInfo(
                 user.getId(),
                 user.getUsername(),
-                user.getCreatedAt() != null ? user.getCreatedAt().toString() : null
+                user.getCreatedAt() != null ? user.getCreatedAt().toString() : null,
+                user.getSignature()
         ));
+    }
+    
+    /**
+     * 更新个性签名
+     */
+    @PutMapping("/signature")
+    public ResponseEntity<?> updateSignature(
+            @RequestBody Map<String, String> request,
+            @RequestHeader("Authorization") String token) {
+        String jwtToken = token.replace("Bearer ", "");
+        
+        if (!jwtUtils.validateToken(jwtToken)) {
+            return ResponseEntity.status(401).body("Token无效或已过期");
+        }
+        
+        Long userId = jwtUtils.getUserIdFromToken(jwtToken);
+        String signature = request.get("signature");
+        
+        authService.updateSignature(userId, signature);
+        
+        return ResponseEntity.ok(Map.of("success", true, "signature", signature));
     }
 }

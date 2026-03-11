@@ -14,5 +14,10 @@ export const authApi = {
   getMe() {
     return api.get('/auth/me')
       .then(res => res.data)
+  },
+
+  updateSignature(signature) {
+    return api.put('/auth/signature', { signature })
+      .then(res => res.data)
   }
 }

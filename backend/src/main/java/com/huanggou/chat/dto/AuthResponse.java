@@ -21,5 +21,6 @@ public class AuthResponse {
         private Long id;
         private String username;
         private String createdAt;
+        private String signature;
     }
 }

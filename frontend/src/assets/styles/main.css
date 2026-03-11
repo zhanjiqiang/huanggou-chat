@@ -1,10 +1,50 @@
+/* CSS 变量定义 */
+:root {
+  /* 深色主题（默认） */
+  --bg-primary: linear-gradient(135deg, #4a2c2a 0%, #2d1b1a 100%);
+  --bg-secondary: rgba(255, 248, 220, 0.15);
+  --bg-tertiary: rgba(255, 248, 220, 0.1);
+  --text-primary: #ffffff;
+  --text-secondary: #ffe4b5;
+  --text-muted: rgba(255, 228, 181, 0.6);
+  --border-color: #f4a460;
+  --border-hover: #d2691e;
+  --accent-color: #f4a460;
+  --accent-gradient: linear-gradient(135deg, #f4a460 0%, #d2691e 100%);
+  --success-color: #4caf50;
+  --error-color: #dc143c;
+  --scrollbar-track: #fff8dc;
+  --scrollbar-thumb: #d2691e;
+}
+
+/* 浅色主题 */
+[data-theme="light"] {
+  --bg-primary: linear-gradient(135deg, #fff8dc 0%, #ffe4b5 100%);
+  --bg-secondary: rgba(139, 69, 19, 0.05);
+  --bg-tertiary: rgba(139, 69, 19, 0.03);
+  --text-primary: #8b4513;
+  --text-secondary: #d2691e;
+  --text-muted: rgba(139, 69, 19, 0.6);
+  --border-color: #d2691e;
+  --border-hover: #8b4513;
+  --accent-color: #d2691e;
+  --accent-gradient: linear-gradient(135deg, #d2691e 0%, #8b4513 100%);
+  --success-color: #2e7d32;
+  --error-color: #c62828;
+  --scrollbar-track: #ffe4b5;
+  --scrollbar-thumb: #8b4513;
+}
+
 body {
-  color: #e0e0e0;
+  color: var(--text-primary);
+  font-weight: 600;
+  background: var(--bg-primary);
+  transition: background 0.3s ease, color 0.3s ease;
 }
 
 * {
   scrollbar-width: thin;
-  scrollbar-color: #4a5568 #1a1a2e;
+  scrollbar-color: var(--scrollbar-thumb) var(--scrollbar-track);
 }
 
 *::-webkit-scrollbar {
@@ -13,61 +53,66 @@ body {
 }
 
 *::-webkit-scrollbar-track {
-  background: #1a1a2e;
+  background: var(--scrollbar-track);
 }
 
 *::-webkit-scrollbar-thumb {
-  background: #4a5568;
+  background: var(--scrollbar-thumb);
   border-radius: 4px;
 }
 
 *::-webkit-scrollbar-thumb:hover {
-  background: #718096;
+  background: var(--border-hover);
 }
 
 /* Element Plus 主题覆盖 */
 .el-button--primary {
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  background: var(--accent-gradient);
   border: none;
+  color: white;
+  font-weight: 600;
 }
 
 .el-button--primary:hover {
-  background: linear-gradient(135deg, #764ba2 0%, #667eea 100%);
+  opacity: 0.8;
 }
 
 .el-input__wrapper,
 .el-textarea__inner {
-  background: rgba(255, 255, 255, 0.05);
-  border-color: rgba(255, 255, 255, 0.1);
-  color: #e0e0e0;
+  background: var(--bg-secondary);
+  border-color: var(--border-color);
+  color: var(--text-primary);
+  font-weight: 600;
 }
 
 .el-input__wrapper:hover,
 .el-textarea__inner:hover {
-  border-color: rgba(102, 126, 234, 0.5);
+  border-color: var(--border-hover);
 }
 
 .el-input__wrapper.is-focus,
 .el-textarea__inner:focus {
-  border-color: #667eea;
+  border-color: var(--accent-color);
 }
 
 .el-input__inner::placeholder,
 .el-textarea__inner::placeholder {
-  color: rgba(224, 224, 224, 0.4);
+  color: var(--text-muted);
+  font-weight: 500;
 }
 
 .el-dialog {
-  background: #1a1a2e;
-  border: 1px solid rgba(255, 255, 255, 0.1);
+  background: var(--bg-primary);
+  border: 2px solid var(--border-color);
 }
 
 .el-dialog__header {
-  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  border-bottom: 2px dashed var(--border-color);
 }
 
 .el-dialog__title {
-  color: #e0e0e0;
+  color: var(--text-secondary);
+  font-weight: 600;
 }
 
 .el-menu {
@@ -76,35 +121,37 @@ body {
 }
 
 .el-menu-item {
-  color: rgba(224, 224, 224, 0.7);
+  color: var(--text-primary);
+  font-weight: 600;
 }
 
 .el-menu-item:hover,
 .el-menu-item.is-active {
-  background: rgba(102, 126, 234, 0.1);
-  color: #667eea;
+  background: var(--bg-secondary);
+  color: var(--accent-color);
 }
 
 .el-card {
-  background: rgba(255, 255, 255, 0.02);
-  border: 1px solid rgba(255, 255, 255, 0.05);
+  background: var(--bg-secondary);
+  border: 2px solid var(--border-color);
 }
 
 .el-message {
-  background: #1a1a2e;
-  border: 1px solid rgba(255, 255, 255, 0.1);
+  background: var(--bg-secondary);
+  border: 2px solid var(--border-color);
 }
 
 .el-message--success {
-  background: rgba(16, 185, 129, 0.1);
-  border-color: rgba(16, 185, 129, 0.3);
+  background: rgba(76, 175, 80, 0.2);
+  border-color: var(--success-color);
 }
 
 .el-message--error {
-  background: rgba(239, 68, 68, 0.1);
-  border-color: rgba(239, 68, 68, 0.3);
+  background: rgba(220, 20, 60, 0.2);
+  border-color: var(--error-color);
 }
 
 .el-message__content {
-  color: #e0e0e0;
+  color: var(--text-secondary);
+  font-weight: 600;
 }

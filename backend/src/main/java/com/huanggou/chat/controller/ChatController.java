@@ -22,7 +22,7 @@ import java.util.Map;
  * 聊天控制器
  */
 @RestController
-@RequestMapping("/api/chat")
+@RequestMapping("/chat")
 @RequiredArgsConstructor
 public class ChatController {
     

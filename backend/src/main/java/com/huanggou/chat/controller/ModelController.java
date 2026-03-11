@@ -9,7 +9,7 @@ import java.util.*;
  * 模型控制器
  */
 @RestController
-@RequestMapping("/api/models")
+@RequestMapping("/models")
 public class ModelController {
     
     // 可用模型列表（智谱 AI 原生 API）

@@ -69,11 +69,21 @@ public class AuthService {
                 .orElseThrow(() -> new RuntimeException("用户不存在"));
     }
     
+    /**
+     * 更新个性签名
+     */
+    public void updateSignature(Long userId, String signature) {
+        User user = getUserById(userId);
+        user.setSignature(signature);
+        userMapper.save(user);
+    }
+    
     private AuthResponse buildAuthResponse(User user, String token) {
         AuthResponse.UserInfo userInfo = new AuthResponse.UserInfo(
                 user.getId(),
                 user.getUsername(),
-                user.getCreatedAt() != null ? user.getCreatedAt().toString() : null
+                user.getCreatedAt() != null ? user.getCreatedAt().toString() : null,
+                user.getSignature()
         );
         
         return new AuthResponse(token, userInfo);

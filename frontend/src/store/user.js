@@ -32,6 +32,29 @@ export const useUserStore = defineStore('user', () => {
     }
   }
 
+  async function getMe() {
+    try {
+      const res = await authApi.getMe()
+      user.value = res.user
+      saveToLocal()
+    } catch (error) {
+      console.error('获取用户信息失败:', error)
+    }
+  }
+
+  async function updateSignature(signature) {
+    try {
+      const res = await authApi.updateSignature(signature)
+      if (user.value) {
+        user.value.signature = signature
+        saveToLocal()
+      }
+      return { success: true }
+    } catch (error) {
+      return { success: false, error: error.response?.data?.error || '更新失败' }
+    }
+  }
+
   function logout() {
     token.value = null
     user.value = null
@@ -63,6 +86,8 @@ export const useUserStore = defineStore('user', () => {
     isLoggedIn,
     login,
     register,
+    getMe,
+    updateSignature,
     logout,
     saveToLocal,
     loadFromLocal

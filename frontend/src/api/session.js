@@ -13,15 +13,22 @@ export const sessionApi = {
       .then(res => res.data)
   },
 
-  // 获取会话消息
-  getMessages(sessionId) {
-    return api.get(`/chat/${sessionId}/messages`)
-      .then(res => res.data)
+  // 获取会话消息（支持分页）
+  getMessages(sessionId, page = 0, size = 10) {
+    return api.get(`/chat/${sessionId}/messages`, {
+      params: { page, size }
+    }).then(res => res.data)
   },
 
   // 创建新会话
   create(title, model) {
     return api.post('/sessions', { title, model })
+      .then(res => res.data)
+  },
+
+  // 更新会话标题
+  updateTitle(id, title) {
+    return api.put(`/sessions/${id}`, { title })
       .then(res => res.data)
   },
 

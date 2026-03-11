@@ -24,6 +24,9 @@ public class User {
     @Column(name = "created_at")
     private LocalDateTime createdAt;
     
+    @Column(length = 200)
+    private String signature;
+    
     @PrePersist
     protected void onCreate() {
         createdAt = LocalDateTime.now();
